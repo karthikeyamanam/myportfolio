@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Karthikeya — Portfolio</title>
+<meta name="description" content="Portfolio — Web, 3D & ML developer" />
+<!-- Favicons omitted for brevity -->
+
+<style>
+  :root{
+    --bg-1:#04060a;
+    --bg-2:#071018;
+    --card:#0d1116;
+    --muted:#9aa4b2;
+    --accent:#ffb86b;
+    --glass: rgba(255,255,255,0.04);
+    --glass-2: rgba(255,255,255,0.02);
+    --radius:14px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  html{
+    scroll-behavior: smooth;
+  }
+  /* Reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body,#app{height:100%}
+  body{
+    min-height:100vh;
+    background: radial-gradient(1000px 600px at 10% 10%, rgba(7,16,24,0.6), transparent),
+                radial-gradient(800px 500px at 90% 90%, rgba(6,10,16,0.5), transparent),
+                linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color:#e6eef6;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.5;
+    padding:36px;
+    overflow-x: hidden;
+  }
+
+  /* container */
+  .wrap{max-width:1100px;margin:0 auto;}
+
+/* Header */
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:52px;height:52px;border-radius:12px;
+    background: linear-gradient(135deg,var(--accent),#ffd59e);
+    display:grid;place-items:center;color:#071018;font-weight:800;font-size:18px;
+    box-shadow:0 6px 20px rgba(255,184,107,0.08), inset 0 -2px 6px rgba(0,0,0,0.2)
+  }
+  nav{display:flex;gap:18px;align-items:center}
+  nav a{color:var(--muted);text-decoration:none;font-weight:600;padding:8px;border-radius:10px;}
+  nav a:hover{color:#fff;background:var(--glass);}
+
+  .cta{
+    background:transparent;border:1px solid rgba(255,255,255,0.06);
+    padding:8px 12px;border-radius:12px;color:var(--muted);font-weight:700;
+  }
+  .hamb{display:none;background:transparent;border:1px solid var(--glass-2);padding:9px;border-radius:10px}
+
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;padding:26px 0}
+  .hero-left h1{font-size:40px;line-height:1.02;margin-bottom:12px}
+  .accent{color:var(--accent)}
+  .lead{color:var(--muted);max-width:54ch;margin-bottom:18px}
+  .actions{display:flex;gap:12px}
+  .btn{
+    display:inline-flex;gap:10px;align-items:center;padding:10px 14px;border-radius:12px;
+    border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    color:#eaf3ff;font-weight:700;text-decoration:none;
+  }
+  .btn.secondary{background:transparent;color:var(--muted);border:1px dashed rgba(255,255,255,0.03)}
+  .hero-right{
+    position:relative;height:360px;border-radius:18px;overflow:hidden;padding:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 20px 50px rgba(2,6,12,0.6);
+  }
+
+  /* Animated 3D mock (pure CSS shimmer + floating) */
+  .device{
+    width:100%;height:100%;border-radius:12px;background:
+      linear-gradient(180deg, rgba(10,14,18,0.6), rgba(6,8,10,0.5));
+    border:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;
+    transform-origin:center;animation:float 6s ease-in-out infinite;
+  }
+  .device .screen{
+    width:92%;height:84%;border-radius:8px;background:linear-gradient(180deg,#071821,#00242b);
+    display:grid;place-items:center;color:var(--muted);font-weight:600;padding:18px;position:relative;overflow:hidden;
+  }
+
+  @keyframes float{
+    0%{transform:translateY(0) rotate(-1deg)}
+    50%{transform:translateY(-10px) rotate(1.5deg)}
+    100%{transform:translateY(0) rotate(-1deg)}
+  }
+
+  /* Projects */
+  section{padding:36px 0}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+    border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.03);
+    transition:transform .35s cubic-bezier(.2,.9,.25,1), box-shadow .35s;
+    cursor:pointer;overflow:hidden;
+  }
+  .card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 18px 40px rgba(2,6,12,0.6)}
+  .card h3{margin-bottom:8px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .tag{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);color:var(--muted);font-weight:700}
+
+  /* Details modal */
+  .modal{
+    position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,12,0.6);z-index:60;padding:28px;
+  }
+  .modal.open{display:grid}
+  .modal-card{max-width:900px;width:100%;background:linear-gradient(180deg,#061017,#071217);border-radius:14px;padding:22px;border:1px solid rgba(255,255,255,0.03)}
+  .modal-grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+  .close{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:10px;color:var(--muted);font-weight:700}
+
+  /* Contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
+  form{display:flex;flex-direction:column;gap:12px}
+  input,textarea{
+    background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:12px;border-radius:10px;color:inherit;
+  }
+  textarea{min-height:140px;resize:vertical}
+  .socials{display:flex;gap:10px;align-items:center}
+
+  /* Footer */
+  footer{border-top:1px solid rgba(255,255,255,0.02);padding-top:18px;margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;align-items:center}
+
+  /* Reveal on scroll */
+  .reveal{opacity:0;transform:translateY(18px);transition:all .6s cubic-bezier(.2,.9,.25,1)}
+  .reveal.show{opacity:1;transform:none}
+
+  /* Responsive */
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr;gap:18px}
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .contact-grid{grid-template-columns:1fr}
+    .hero-right{height:300px}
+  }
+  @media (max-width:640px){
+    nav{display:none}
+    .hamb{display:inline-block}
+    .grid{grid-template-columns:1fr}
+  }
+
+  /* small flourish: animated gradient title */
+  .rainbow {
+    background: linear-gradient(90deg, #ffb86b, #ff7ab6, #8be9fd, #b794ff, #ffb86b);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow 6s linear infinite;
+  }
+  @keyframes rainbow{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
+
+  /* small helper */
+  .muted{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <header>
+      <div class="brand">
+        
+        <div>
+          <div style="font-weight:800">M Karthikeya</div>
+          <div class="muted">Web · 3D · ML</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+        <a href="https://github.com/karthikeyamanam/resume/blob/main/Karthikresune.pdf" class="cta">Resume</a>
+      </nav>
+
+      <button class="hamb" id="hambBtn" aria-label="menu">
+        ☰
+      </button>
+    </header>
+
+    <!-- HERO -->
+    <main>
+      <section class="hero">
+        <div class="hero-left">
+          <h1>Hi — I’m <span class="rainbow">Karthikeya</span><br /><span class="accent">I build fast websites & immersive 3D experiences</span></h1>
+          <p class="lead">I turn ideas into clean interfaces and interactive 3D demos — with performance, accessibility and delightful micro-interactions.</p>
+
+          <div class="actions">
+            <a class="btn" href="#projects" id="seeProjects">View projects →</a>
+            <a class="btn secondary" href="#contact">Hire me</a>
+          </div>
+
+          <div style="margin-top:18px" class="muted">Primary: HTML • CSS • JS • Three.js • React • Node • Python</div>
+        </div>
+
+        <aside class="hero-right">
+          <div class="device" aria-hidden="true">
+            <div class="screen">
+              <!-- Simple faux-3D screenshot that animates -->
+              <svg width="260" height="160" viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+                <rect x="0" y="0" width="260" height="160" rx="8" fill="url(#g)"/>
+                <defs>
+                  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#032a33"/><stop offset="1" stop-color="#072b30"/>
+                  </linearGradient>
+                </defs>
+                <g fill="#0ea5a5" opacity="0.06">
+                  <rect x="16" y="18" width="88" height="16" rx="4"/>
+                  <rect x="16" y="42" width="228" height="8" rx="4"/>
+                  <rect x="16" y="58" width="228" height="8" rx="4"/>
+                  <rect x="16" y="76" width="200" height="8" rx="4"/>
+                </g>
+              </svg>
+
+              <div style="position:absolute;bottom:14px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center">
+                <div class="muted">Three.js • WebGL demo</div>
+                <div style="font-weight:800;background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:10px">Live</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="reveal">
+        <h2 style="margin-bottom:12px">About</h2>
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start">
+          <div>
+            <p class="muted">I’m a final-year BCA student & web developer with a passion for 3D web experiences and machine learning projects. I build production-ready websites, interactive demos and small ML prototypes.</p>
+            <ul style="margin-top:12px;list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+              <li class="tag">Responsive UI</li>
+              <li class="tag">Three.js</li>
+              <li class="tag">Electron</li>
+              <li class="tag">Node & APIs</li>
+            </ul>
+          </div>
+          <div style="background:var(--glass);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.02)">
+            <div style="font-weight:800;margin-bottom:8px">Quick facts</div>
+            <div class="muted">Based in India · Available for freelance · Open to internships & remote roles</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects" class="reveal">
+        <h2 style="margin-bottom:12px">Selected projects</h2>
+
+        <div class="grid" id="projectsGrid">
+          <!-- cards created by JS -->
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="reveal" style="padding-bottom:40px">
+        <h2 style="margin-bottom:12px">Get in touch</h2>
+
+        <div class="contact-grid">
+          <div>
+            <form id="contactForm" onsubmit="return false;">
+              <input id="name" placeholder="Your name" required />
+              <input id="email" type="email" placeholder="you@domain.com" required />
+              <textarea id="msg" placeholder="Brief message"></textarea>
+              <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+                <button class="btn" id="sendBtn">Send message</button>
+                <div class="muted">Or email me at <strong style="color:var(--accent)">karthikeyamanam9@example.com</strong></div>
+              </div>
+            </form>
+          </div>
+
+          <aside style="background:var(--card);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.02)">
+            <div style="font-weight:800">Connect</div>
+            <div class="muted" style="margin-top:8px">Github • LinkedIn • Portfolio</div>
+            <div style="margin-top:12px" class="socials">
+              <a class="btn secondary" href="#" onclick="window.open('https://github.com/karthikeyamanam','_blank')">Github</a>
+              <a class="btn secondary" href="#" onclick="window.open('https://www.linkedin.com/in/karthikeya-manam-752a42375?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app ','_blank')">LinkedIn</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <footer>
+        <div class="muted">© <span id="year"></span> Karthikeya — Built with ❤️</div>
+        <div class="muted">Made with HTML • CSS • JS</div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" role="dialog" aria-hidden="true">
+    <div class="modal-card" role="document">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-weight:800" id="modalTitle">Project</div>
+        <button class="close" id="closeModal">Close</button>
+      </div>
+      <div class="modal-grid">
+        <div id="modalBody">Description</div>
+        <aside>
+          <div style="margin-bottom:8px;font-weight:700">Tech</div>
+          <div id="modalTags" class="tags"></div>
+          <div style="margin-top:18px">
+            <a id="demoLink" class="btn" href="#" target="_blank">Open demo</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ========= Content data (replace with your real projects) ========= */
+const PROJECTS = [
+ {
+    id: 'p1',
+    title: 'KVK Fashion — Clothing Brand',
+    desc: 'A full-stack clothing brand website built using HTML, CSS, JavaScript, PHP, and MySQL. Features include product listings, user registration, and smooth checkout flow.',
+    tags: ['HTML','CSS','JS','PHP','MySQL'],
+    demo: 'https://kvkfashion.in/' // add your live/demo link here
+  },
+{
+    id: 'p2',
+    title: '3D Portfolio Website',
+    desc: 'Personal 3D portfolio showcasing skills and work. Built using HTML, CSS, JavaScript, GSAP animations, Canvas, and Blender for immersive 3D models.',
+    tags: ['HTML','CSS','JS','GSAP','Canvas','Blender'],
+    demo: '#' // add your live/demo link here
+  },
+   {
+    id: 'p3',
+    title: 'Tune Forge — E-commerce Platform',
+    desc: 'A complete e-commerce website with integrated 3D object viewer, product images, and videos all created by me. Built with HTML, CSS, JS, PHP, MySQL, and Blender.',
+    tags: ['HTML','CSS','JS','PHP','MySQL','Blender'],
+    demo: '#' // add your live/demo link here
+  }
+];
+
+/* ========= DOM population ========= */
+const grid = document.getElementById('projectsGrid');
+
+PROJECTS.forEach(p=>{
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.setAttribute('data-id', p.id);
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>${p.title}</h3>
+      <div class="muted" style="font-size:13px">Featured</div>
+    </div>
+    <p class="muted" style="margin-top:8px">${p.desc}</p>
+    <div class="tags" style="margin-top:12px">
+      ${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}
+    </div>
+  `;
+  el.addEventListener('click', ()=>openModal(p));
+  grid.appendChild(el);
+});
+
+/* ========= Modal logic ========= */
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+const modalTags = document.getElementById('modalTags');
+const demoLink = document.getElementById('demoLink');
+const closeModalBtn = document.getElementById('closeModal');
+
+function openModal(p){
+  modalTitle.textContent = p.title;
+  modalBody.innerHTML = `<p class="muted">${p.desc}</p>`;
+  modalTags.innerHTML = p.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  demoLink.href = p.demo || '#';
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+closeModalBtn.addEventListener('click', ()=> {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+});
+modal.addEventListener('click', (e)=> {
+  if(e.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+});
+
+/* ========= Small UI interactions ========= */
+document.getElementById('year').textContent = new Date().getFullYear();
+document.getElementById('seeProjects').addEventListener('click', (e)=> {
+  document.querySelector('#projects').scrollIntoView({behavior:'smooth'});
+});
+
+document.getElementById('sendBtn').addEventListener('click', ()=> {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const msg = document.getElementById('msg').value.trim();
+  if(!name || !email){ alert('Please include your name and email.'); return; }
+  // No backend in this template — show a success toast
+  alert('Thanks — message captured locally. Replace this with a real submission in production.');
+});
+
+/* Mobile menu (very small) */
+const hamb = document.getElementById('hambBtn');
+hamb && hamb.addEventListener('click', ()=>{
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+  if(nav.style.display === 'flex'){ nav.style.display = 'none'; } else { nav.style.display = 'flex'; nav.style.flexDirection='column'; nav.style.position='absolute'; nav.style.right='36px'; nav.style.top='72px'; nav.style.background='var(--card)'; nav.style.padding='12px'; nav.style.borderRadius='12px'; }
+});
+
+/* Reveal on scroll */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=> {
+  entries.forEach(en=>{
+    if(en.isIntersecting) en.target.classList.add('show');
+  });
+},{threshold:0.18});
+reveals.forEach(r=>io.observe(r));
+
+/* Small keyboard accessibility: close modal with Esc */
+document.addEventListener('keydown', (e)=> {
+  if(e.key === 'Escape') {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+  }
+});
+</script>
+</body>
+</html>
